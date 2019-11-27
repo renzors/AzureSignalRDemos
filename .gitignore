@@ -1,0 +1,6 @@
+.vs
+bin
+obj
+**/wwwroot/lib
+**/PublishProfiles
+Demo3/steps

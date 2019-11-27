@@ -1,0 +1,21 @@
+az login
+
+$SIGNALR_SERVICE_NAME="msl-sigr-signalrdemo2"
+$RG_GROUP_NAME="SigRDemo2"
+
+az group create --name $RG_GROUP_NAME --location eastus2
+
+az signalr create `
+  --name $SIGNALR_SERVICE_NAME `
+  --resource-group $RG_GROUP_NAME `
+  --sku Free_DS2 `
+  --unit-count 1
+
+$SIGNALR_CONNECTION_STRING=az signalr key list `
+  --name $(az signalr list `
+    --resource-group $RG_GROUP_NAME `
+    --query [0].name -o tsv) `
+  --resource-group $RG_GROUP_NAME `
+  --query primaryConnectionString -o tsv
+
+Write-OutPut "`n`nRun this in command line:`n`n dotnet user-secrets set Azure:SignalR:ConnectionString `"$SIGNALR_CONNECTION_STRING`"`n`n"

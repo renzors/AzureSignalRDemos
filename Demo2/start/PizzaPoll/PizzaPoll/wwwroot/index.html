@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title></title>
+    <script src="lib/@aspnet/signalr/dist/browser/signalr.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container-fluid">
+        <nav class="navbar navbar-light bg-light">
+            <span class="navbar-brand mb-0 h1 text-center">Pizza Poll</span>
+        </nav>
+        <div class="row mt-3">
+            <div class="col-3 mx-auto">
+                <button id="conpinabtn" type="button" class="btn btn-primary btn-block">Con Piña</button>
+                <p>Results: <span id="conpina">0</span></p>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-3 mx-auto">
+                <button id="sinpinabtn" type="button" class="btn btn-secondary btn-block">Sin Piña</button>
+                <p>Results: <span id="sinpina">0</span></p>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-3 mx-auto">
+                <button id="ambosbtn" type="button" class="btn btn-success btn-block">Ambos</button>
+                <p>Results: <span id="ambos">0</span></p>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var connection = new signalR.HubConnectionBuilder().withUrl('/poll').build();        
+
+        document.getElementById("conpinabtn").onclick = function () {
+            connection.invoke("SetVote", 1);
+        };
+
+        document.getElementById("sinpinabtn").onclick = function () {
+            connection.invoke("SetVote", 2);
+        };
+
+        document.getElementById("ambosbtn").onclick = function () {
+            connection.invoke("SetVote", 3);
+        };
+
+        connection.on("updatePoll", function (conpina, sinpina, ambos) {
+            document.getElementById("conpina").innerHTML = conpina;
+            document.getElementById("sinpina").innerHTML = sinpina;
+            document.getElementById("ambos").innerHTML = ambos;
+        });
+
+        connection.start();
+    </script>
+</body>
+</html>
